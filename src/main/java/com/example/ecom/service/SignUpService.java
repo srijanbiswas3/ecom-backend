@@ -1,8 +1,8 @@
 package com.example.ecom.service;
 
-import com.example.ecom.dto.UsersDto;
+import com.example.ecom.dto.UserDTO;
 
 public interface SignUpService {
-    
-    String signUp(UsersDto usersDto);
+
+    String signUp(UserDTO userDTO);
 }

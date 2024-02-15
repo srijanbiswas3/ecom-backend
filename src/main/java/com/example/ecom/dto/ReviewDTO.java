@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenResponseDto {
-
-    private String accessToken;
-    private String refreshToken;
-
+public class ReviewDTO {
+    private Long id;
+    private Long userId;
+    private Long productId;
+    private int rating;
+    private String comment;
 }

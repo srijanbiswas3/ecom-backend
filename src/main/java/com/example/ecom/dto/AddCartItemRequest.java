@@ -5,11 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class TokenResponseDto {
-
-    private String accessToken;
-    private String refreshToken;
+@NoArgsConstructor
+public class AddCartItemRequest {
+    private Long userId;
+    private Long productId;
+    private int quantity;
 
 }
