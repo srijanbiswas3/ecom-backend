@@ -9,6 +9,6 @@ public interface JwtService {
 
     public Map<String, String> generateTokens(UserDTO userDTO) throws Exception;
 
-    public Map<String, String> generateAccessToken(TokenResponseDto tokenResponseDto);
+    public Map<String, String> getAccessTokenFromRefreshToken(TokenResponseDto tokenResponseDto);
 
 }

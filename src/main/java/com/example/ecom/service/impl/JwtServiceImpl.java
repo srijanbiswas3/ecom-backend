@@ -2,6 +2,7 @@ package com.example.ecom.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,13 +15,12 @@ import com.example.ecom.dto.TokenResponseDto;
 import com.example.ecom.dto.UserDTO;
 import com.example.ecom.entity.Jwt;
 import com.example.ecom.entity.User;
+import com.example.ecom.exception.TokenVerificationException;
 import com.example.ecom.repository.JwtRepository;
 import com.example.ecom.repository.UsersRepository;
 import com.example.ecom.service.JwtService;
 import com.example.ecom.util.JwtUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.jsonwebtoken.Claims;
 
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -54,17 +54,17 @@ public class JwtServiceImpl implements JwtService {
         }
         String accessToken = jwtUtils.generateToken(user, ACCESS_TOKEN_EXPIRATION);
         String refreshToken = UUID.randomUUID().toString();
-        String hashedRefreshToken = BCrypt.hashpw(refreshToken, BCrypt.gensalt());
+        // String hashedRefreshToken = BCrypt.hashpw(refreshToken, BCrypt.gensalt());
 
         Jwt jwt = jwtRepository.findByUser(user);
         if (jwt != null) {
-            jwt.setRefreshToken(hashedRefreshToken);
+            jwt.setRefreshToken(refreshToken);
             jwt.setExpiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION));
             jwtRepository.save(jwt);
         } else {
             jwt = new Jwt();
             jwt.setUser(user);
-            jwt.setRefreshToken(hashedRefreshToken);
+            jwt.setRefreshToken(refreshToken);
             jwt.setExpiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION));
             jwtRepository.save(jwt);
         }
@@ -79,31 +79,33 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Map<String, String> generateAccessToken(TokenResponseDto tokenResponseDto) {
-        if (!jwtUtils.verifyToken(tokenResponseDto.getAccessToken())) {
-            return Map.of("error", "Invalid Access Token");
-        }
+    public Map<String, String> getAccessTokenFromRefreshToken(TokenResponseDto tokenResponseDto) {
 
-        Claims claims = jwtUtils.extractClaims(tokenResponseDto.getAccessToken());
-        long userId = (long) claims.get("userId");
-
-        User user = usersRepository.findById(userId).get();
+        // String hashedRefreshToken = BCrypt.hashpw(tokenResponseDto.getRefreshToken(),
+        // BCrypt.gensalt());
+        List<Jwt> jwtlist = jwtRepository.findByRefreshToken(tokenResponseDto.getRefreshToken());
+        User user = usersRepository.findById(jwtlist.get(0).getUser().getId()).get();
         Jwt jwt = jwtRepository.findByUser(user);
 
-        if (jwt == null || !jwt.getRefreshToken().equals(tokenResponseDto.getRefreshToken())) {
-            return Map.of("error", "Invalid Refresh Token");
+        if (!tokenResponseDto.getRefreshToken().equals(jwt.getRefreshToken())) {
+            throw new TokenVerificationException("Refresh token Donnt match");
         }
+        // if (!BCrypt.checkpw(tokenResponseDto.getRefreshToken(),
+        // jwt.getRefreshToken())) {
+        // return Map.of("error", "Refresh Token Not Matched");
+        // }
 
         String newRefreshToken = UUID.randomUUID().toString();
-        String hashedRefreshToken = BCrypt.hashpw(newRefreshToken, BCrypt.gensalt());
-        jwt.setRefreshToken(hashedRefreshToken);
+        // String newHashedRefreshToken = BCrypt.hashpw(newRefreshToken,
+        // BCrypt.gensalt());
+        jwt.setRefreshToken(newRefreshToken);
         jwt.setExpiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION));
         jwtRepository.save(jwt);
 
         String newAccessToken = jwtUtils.generateToken(user, ACCESS_TOKEN_EXPIRATION);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", newAccessToken);
-        tokens.put("refreshToken", hashedRefreshToken);
+        tokens.put("refreshToken", newRefreshToken);
         return tokens;
     }
 

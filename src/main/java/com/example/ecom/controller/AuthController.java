@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ecom.dto.TokenResponseDto;
 import com.example.ecom.dto.UserDTO;
+import com.example.ecom.exception.TokenVerificationException;
 import com.example.ecom.service.JwtService;
 import com.example.ecom.service.SignUpService;
 
@@ -46,7 +48,7 @@ public class AuthController {
             headers.add(HttpHeaders.SET_COOKIE,
                     "access_token=" + tokens.get("accessToken") + "; HttpOnly; Path=/; SameSite=Strict");
 
-            return ResponseEntity.ok().headers(headers).body(tokens);
+            return ResponseEntity.ok().headers(headers).body(Map.of("refreshToken", tokens.get("refreshToken")));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -74,8 +76,17 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<Map<String, String>> refreshToken(@RequestBody TokenResponseDto tokenResponseDto) {
         try {
-            Map<String, String> accessToken = jwtService.generateAccessToken(tokenResponseDto);
-            return ResponseEntity.ok(accessToken);
+            Map<String, String> tokens = jwtService.getAccessTokenFromRefreshToken(tokenResponseDto);
+
+            // Create a new HttpHeaders object
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.SET_COOKIE,
+                    "access_token=" + tokens.get("accessToken") + "; HttpOnly; Path=/; SameSite=Strict");
+
+            return ResponseEntity.ok().headers(headers).body(Map.of("refreshToken", tokens.get("refreshToken")));
+        } catch (TokenVerificationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
