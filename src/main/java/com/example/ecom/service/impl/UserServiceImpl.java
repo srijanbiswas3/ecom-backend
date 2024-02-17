@@ -1,5 +1,7 @@
 package com.example.ecom.service.impl;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +29,13 @@ public class UserServiceImpl implements UserService {
     public String getUserInfo(String token) {
         String userInfoJson = null;
         try {
-            jwtUtils.verifyToken(token);//throws exception if not verified
+            jwtUtils.verifyToken(token);// throws exception if not verified
 
             Long userId = Long.parseLong(jwtUtils.extractClaims(token).get("userId").toString());
 
             User user = usersRepository.findById(userId).orElse(null);
 
-            if (user == null) {
+            if (Objects.isNull(user)) {
                 throw new UserNotFoundException("User not found");
             }
 

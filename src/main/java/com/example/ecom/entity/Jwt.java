@@ -2,6 +2,7 @@ package com.example.ecom.entity;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,14 +11,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "JWT")
+@Table(name = "jwt")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Jwt {
 
     @Id
@@ -28,6 +31,7 @@ public class Jwt {
     @JoinColumn(name = "user_id")
     private User user;
     private String refreshToken;
-    private Date expiryTime;
+
+    private String expiryTime;
 
 }

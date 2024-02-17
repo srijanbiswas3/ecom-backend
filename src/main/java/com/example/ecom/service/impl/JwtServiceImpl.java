@@ -59,13 +59,18 @@ public class JwtServiceImpl implements JwtService {
         Jwt jwt = jwtRepository.findByUser(user);
         if (jwt != null) {
             jwt.setRefreshToken(refreshToken);
-            jwt.setExpiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION));
+            jwt.setExpiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION).toString());
             jwtRepository.save(jwt);
         } else {
-            jwt = new Jwt();
-            jwt.setUser(user);
-            jwt.setRefreshToken(refreshToken);
-            jwt.setExpiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION));
+            jwt = Jwt.builder()
+                    .user(user)
+                    .expiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION).toString())
+                    .refreshToken(refreshToken)
+                    .build();
+
+            // jwt.setUser(user);
+            // jwt.setRefreshToken(refreshToken);
+            // jwt.setExpiryTime();
             jwtRepository.save(jwt);
         }
 
@@ -83,11 +88,11 @@ public class JwtServiceImpl implements JwtService {
 
         // String hashedRefreshToken = BCrypt.hashpw(tokenResponseDto.getRefreshToken(),
         // BCrypt.gensalt());
-        List<Jwt> jwtlist = jwtRepository.findByRefreshToken(tokenResponseDto.getRefreshToken());
-        User user = usersRepository.findById(jwtlist.get(0).getUser().getId()).get();
-        Jwt jwt = jwtRepository.findByUser(user);
+        Jwt jwtEntity = jwtRepository.findByRefreshToken(tokenResponseDto.getRefreshToken());
+        User user = usersRepository.findById(jwtEntity.getUser().getId()).get();
+        // Jwt jwt = jwtRepository.findByUser(user);
 
-        if (!tokenResponseDto.getRefreshToken().equals(jwt.getRefreshToken())) {
+        if (!tokenResponseDto.getRefreshToken().equals(jwtEntity.getRefreshToken())) {
             throw new TokenVerificationException("Refresh token Donnt match");
         }
         // if (!BCrypt.checkpw(tokenResponseDto.getRefreshToken(),
@@ -98,9 +103,10 @@ public class JwtServiceImpl implements JwtService {
         String newRefreshToken = UUID.randomUUID().toString();
         // String newHashedRefreshToken = BCrypt.hashpw(newRefreshToken,
         // BCrypt.gensalt());
-        jwt.setRefreshToken(newRefreshToken);
-        jwt.setExpiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION));
-        jwtRepository.save(jwt);
+        // Jwt jwt=new Jwt();
+        jwtEntity.setRefreshToken(newRefreshToken);
+        jwtEntity.setExpiryTime(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION).toString());
+        jwtRepository.save(jwtEntity);
 
         String newAccessToken = jwtUtils.generateToken(user, ACCESS_TOKEN_EXPIRATION);
         Map<String, String> tokens = new HashMap<>();

@@ -13,6 +13,6 @@ public class JwtDTO {
 
     private Long userId;
     private String refreshToken;
-    private Date expiryTime;
+    private String expiryTime;
 
 }
