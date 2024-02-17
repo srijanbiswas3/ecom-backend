@@ -23,7 +23,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", allowCredentials = "true")
+// @CrossOrigin(origins = {"http://localhost:5173","https://ecom-java-backend-ad4067ce2405.herokuapp.com"}, allowedHeaders = "*", allowCredentials = "true")
 public class AuthController {
 
     @Autowired

@@ -3,6 +3,7 @@ package com.example.ecom.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import com.example.ecom.service.OrderService;
 import com.example.ecom.util.JwtUtils;
 
 @RestController
+// @CrossOrigin(origins = {"http://localhost:5173","https://ecom-java-backend-ad4067ce2405.herokuapp.com"}, allowedHeaders = "*", allowCredentials = "true")
 public class OrderController {
 
     @Autowired
