@@ -46,7 +46,7 @@ public class AuthController {
             HttpHeaders headers = new HttpHeaders();
             // Add the access token to the headers as a HTTP-only cookie
             headers.add(HttpHeaders.SET_COOKIE,
-                    "access_token=" + tokens.get("accessToken") + "; HttpOnly; Path=/; SameSite=Strict");
+                    "access_token=" + tokens.get("accessToken") + "; HttpOnly; Secure ; Path=/; SameSite=Strict");
 
             return ResponseEntity.ok().headers(headers).body(Map.of("refreshToken", tokens.get("refreshToken")));
         } catch (Exception e) {
