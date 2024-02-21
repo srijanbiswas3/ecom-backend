@@ -11,6 +11,9 @@ public class ReviewDTO {
     private Long id;
     private Long userId;
     private Long productId;
-    private int rating;
+    private float rating;
+    private String title;
     private String comment;
+    private String date;
+    private String reviewImageId;
 }

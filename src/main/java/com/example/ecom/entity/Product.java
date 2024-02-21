@@ -27,7 +27,9 @@ public class Product {
 
     private String name;
     private String description;
+    private String details;
     private double price;
+    private double discountedPrice;
     private int quantity;
     private String imageURL;
     private String brand;

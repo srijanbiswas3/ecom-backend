@@ -29,6 +29,9 @@ public class Review {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private int rating;
+    private float rating;
+    private String title;
     private String comment;
+    private String date;
+    private String reviewImageId;
 }

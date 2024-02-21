@@ -81,7 +81,7 @@ public class AuthController {
             // Create a new HttpHeaders object
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.SET_COOKIE,
-                    "access_token=" + tokens.get("accessToken") + "; HttpOnly; Path=/; SameSite=None");
+                    "access_token=" + tokens.get("accessToken") + "; HttpOnly ; Secure ; Path=/; SameSite=None");
 
             return ResponseEntity.ok().headers(headers).body(Map.of("refreshToken", tokens.get("refreshToken")));
         } catch (TokenVerificationException e) {
