@@ -16,10 +16,11 @@ public class ProductDTO {
     private double discountedPrice;
     private int quantity;
     private String imageURL;
-    private String brand;
+   
     private String gender;
     private String size;
     private String color;
     private Long categoryId;
+    private Long brandId;
     private Long sellerId;
 }

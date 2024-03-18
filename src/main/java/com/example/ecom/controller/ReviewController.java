@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ecom.dto.ProductRating;
 import com.example.ecom.entity.Review;
 import com.example.ecom.service.ReviewService;
 
@@ -35,19 +36,18 @@ public class ReviewController {
     }
 
     @GetMapping("/average/{productId}")
-    public double getAverageRating(@PathVariable long productId) {
+    public ProductRating getAverageRating(@PathVariable long productId) {
         return reviewService.getAverageRatingForProduct(productId);
     }
 
     @GetMapping("/average")
-    public Map<Long, Float> getAverageRatingsGroupByProductId() {
-        List<Object[]> result = reviewService.getAverageRatingsGroupByProductId();
-        Map<Long, Float> averageRatings = new HashMap<>();
+    public Map<Long, ProductRating> getAverageRatingsGroupByProductId() {
+        List<ProductRating> results = reviewService.getAverageRatingsGroupByProductId();
+        Map<Long, ProductRating> averageRatings = new HashMap<>();
 
-        for (Object[] obj : result) {
-            Long productId = (Long) obj[0];
-            Float avgRating = ((Number) obj[1]).floatValue(); // Convert to Float
-            averageRatings.put(productId, avgRating);
+        for (ProductRating result : results) {
+            ProductRating productRating = new ProductRating(result.getAvgRating(), result.getUserCount());
+            averageRatings.put(result.getId(), productRating);
         }
 
         return averageRatings;

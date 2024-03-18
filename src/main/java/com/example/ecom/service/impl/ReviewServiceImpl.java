@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.ecom.dto.ProductRating;
 import com.example.ecom.entity.Review;
 import com.example.ecom.exception.ReviewNotFoundException;
 import com.example.ecom.repository.ReviewRepository;
@@ -27,14 +28,16 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Object[]> getAverageRatingsGroupByProductId() {
-        return reviewRepository.findAverageRatingsGroupByProductId();
+    public List<ProductRating> getAverageRatingsGroupByProductId() {
+        List<ProductRating> productRatings = reviewRepository.findAverageRatingsGroupByProductId();
+
+        return productRatings;
     }
 
     @Override
-    public double getAverageRatingForProduct(long productId) {
-        Double averageRating = reviewRepository.findAverageRatingByProductId(productId);
-        return averageRating != null ? averageRating : 0.0;
+    public ProductRating getAverageRatingForProduct(long productId) {
+        ProductRating optionalProductRating = reviewRepository.findAverageRatingByProductId(productId);
+        return optionalProductRating;
     }
 
     @Override

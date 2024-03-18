@@ -2,6 +2,7 @@ package com.example.ecom.service;
 
 import java.util.List;
 
+import com.example.ecom.dto.ProductRating;
 import com.example.ecom.entity.Review;
 
 public interface ReviewService {
@@ -9,9 +10,9 @@ public interface ReviewService {
 
     List<Review> getReviewsByProductId(long productId);
 
-    List<Object[]> getAverageRatingsGroupByProductId();
+    List<ProductRating> getAverageRatingsGroupByProductId();
 
-    double getAverageRatingForProduct(long productId);
+    ProductRating getAverageRatingForProduct(long productId);
 
     void editReview(long reviewId, Review updatedReview);
 

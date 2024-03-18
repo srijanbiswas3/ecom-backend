@@ -17,7 +17,7 @@ import com.example.ecom.dto.UpdateCartItemRequest;
 import com.example.ecom.service.CartService;
 
 @RestController
-@RequestMapping("/api/carts")
+@RequestMapping("/carts")
 public class CartController {
 
     @Autowired
