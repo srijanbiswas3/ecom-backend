@@ -16,7 +16,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT new com.example.ecom.dto.ProductRating( r.product.id, AVG(r.rating),COUNT(r.user)) FROM Review r GROUP BY r.product.id")
     List<ProductRating> findAverageRatingsGroupByProductId();
 
-    @Query("SELECT new com.example.ecom.dto.ProductRating( r.product.id,AVG(r.rating),count(r.user)) FROM Review r WHERE r.product.id = :productId")
+    @Query("SELECT new com.example.ecom.dto.ProductRating( r.product.id,AVG(r.rating),count(r.user)) FROM Review r WHERE r.product.id = :productId GROUP BY r.product.id")
     ProductRating findAverageRatingByProductId(long productId);
 
+    @Query("SELECT new com.example.ecom.dto.ProductRating( r.product.id,AVG(r.rating),count(r.user)) FROM Review r WHERE r.product.id = :productId GROUP BY r.product.id, r.rating")
+    List<ProductRating> findProductRatingList(long productId);
 }

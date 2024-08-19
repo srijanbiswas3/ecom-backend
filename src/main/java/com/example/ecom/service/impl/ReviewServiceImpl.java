@@ -39,6 +39,11 @@ public class ReviewServiceImpl implements ReviewService {
         ProductRating optionalProductRating = reviewRepository.findAverageRatingByProductId(productId);
         return optionalProductRating;
     }
+    @Override
+    public List<ProductRating> getReviewChartData(long productId) {
+        List<ProductRating> chartData = reviewRepository.findProductRatingList(productId);
+        return chartData;
+    }
 
     @Override
     public void editReview(long reviewId, Review updatedReview) {

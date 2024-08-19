@@ -22,6 +22,8 @@ import com.example.ecom.service.ReviewService;
 @RequestMapping("/reviews")
 public class ReviewController {
 
+    // todo
+    // getrating group by productid
     @Autowired
     private ReviewService reviewService;
 
@@ -51,6 +53,16 @@ public class ReviewController {
         }
 
         return averageRatings;
+    }
+
+    @GetMapping("/chartData/{productId}")
+    public Map<Double,Long> getReviewChartData(@PathVariable long productId) {
+        List<ProductRating> results = reviewService.getReviewChartData(productId);
+
+        Map<Double,Long> reviewMap=new HashMap<>();
+        
+        results.stream().forEach(x->reviewMap.put(x.getAvgRating(),x.getUserCount()));
+        return reviewMap;
     }
 
     @PutMapping("/{reviewId}")

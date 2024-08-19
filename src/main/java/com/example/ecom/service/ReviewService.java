@@ -14,6 +14,8 @@ public interface ReviewService {
 
     ProductRating getAverageRatingForProduct(long productId);
 
+    List<ProductRating> getReviewChartData(long productId);
+
     void editReview(long reviewId, Review updatedReview);
 
     void deleteReview(long reviewId);
