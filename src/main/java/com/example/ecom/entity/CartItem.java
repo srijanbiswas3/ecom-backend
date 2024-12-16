@@ -20,7 +20,7 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+//todo dont need cart here
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
